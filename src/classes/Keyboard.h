@@ -83,6 +83,7 @@ class LedKeyboard {
 		};
 		enum class Key : uint16_t { // 127 items
 			
+			blank = 0,
 			logo = static_cast<uint8_t>(KeyAddressGroup::logo) << 8 | 0x01,
 			logo2,
 			
@@ -136,7 +137,6 @@ class LedKeyboard {
 		
 		typedef std::vector<KeyValue> KeyValueArray;
 		
-		
 		~LedKeyboard();
 		
 		
@@ -171,7 +171,7 @@ class LedKeyboard {
 		
 		typedef std::vector<unsigned char> byte_buffer_t;
 		typedef std::vector<Key> KeyArray;
-		
+		typedef std::vector<KeyArray> KeyMatrix;
 		
 		const KeyArray keyGroupLogo = { Key::logo, Key::logo2 };
 		const KeyArray keyGroupIndicators = { Key::caps, Key::num, Key::scroll, Key::game, Key::backlight };
@@ -202,6 +202,15 @@ class LedKeyboard {
 			Key::enter, Key::backspace, Key::tab, Key::space, Key::minus, Key::equal,
 			Key::open_bracket, Key::close_bracket, Key::backslash, Key::dollar, Key::semicolon, Key::quote, Key::tilde,
 			Key::comma, Key::period, Key::slash, Key::caps_lock, Key::intl_backslash
+		};
+
+		const KeyMatrix keyMatrix = {
+			{Key::esc, Key::blank, Key::f1, Key::f2, Key::f3, Key::f4, Key::blank, Key::f5, Key::f7, Key::f8, Key::blank, Key::f9, Key::f10, Key::f11, Key::f12},
+			{Key:: tilde, Key::n1, Key::n2, Key::n3, Key::n4, Key::n5, Key::n6, Key::n7, Key::n8, Key::n9, Key::n0, Key::minus, Key::equal},
+			{Key::tab, Key::q, Key::w, Key::e, Key::r, Key::t, Key::y, Key::u, Key::i, Key::o, Key::p, Key::open_bracket, Key::close_bracket, Key::backslash},
+			{Key::caps_lock, Key::a, Key::s, Key::d, Key::f, Key::g, Key::h, Key::j, Key::k, Key::l, Key::semicolon, Key::quote, Key::enter},
+			{Key::shift_left, Key::z, Key::x, Key::c,Key::v, Key::b, Key::n, Key::m, Key::comma, Key::period, Key::slash, Key::shift_right},
+			{Key::ctrl_left, Key::win_left, Key::alt_left, Key::blank, Key::blank, Key::space, Key::blank, Key::blank, Key::blank, Key::alt_right, Key::win_right, Key::menu, Key::ctrl_right}
 		};
 		
 		bool m_isOpen = false;
