@@ -7,6 +7,7 @@
 #include "helpers/help.h"
 #include "helpers/utils.h"
 #include "classes/Keyboard.h"
+#include "classes/heatmap.h"
 
 
 int commit(LedKeyboard &kbd) {
@@ -282,9 +283,12 @@ int main(int argc, char **argv) {
 			return 2;
 		}
 		
+		
+
 		// Command arguments, these will cause parsing to ignore anything beyond the command and its arguments
 		if (arg == "-c") return commit(kbd);
 		else if (arg == "--print-device") {printDeviceInfo(kbd.getCurrentDevice()); return 0;}
+		else if (argc > (argIndex + 1) && arg == "-hm") heatmap(kbd, argv[argIndex + 1]);
 		else if (argc > (argIndex + 1) && arg == "-a") return setAllKeys(kbd, argv[argIndex + 1]);
 		else if (argc > (argIndex + 2) && arg == "-g") return setGroupKeys(kbd, argv[argIndex + 1], argv[argIndex + 2]);
 		else if (argc > (argIndex + 2) && arg == "-k") return setKey(kbd, argv[argIndex + 1], argv[argIndex + 2]);
