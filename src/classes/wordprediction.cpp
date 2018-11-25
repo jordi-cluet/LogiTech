@@ -36,6 +36,7 @@ int getKey(char c) {
 int lightWord(LedKeyboard &kbd, std::string word) {
     uint8_t index;
     kbd.setAllKeys(backgroundColor);
+    if(! kbd.commit()) return 1;
     for (int i = 0; i < word.length() && i < 4; i++) {
         index = getKey(word[i]);
         if (index >= 0) {
@@ -60,8 +61,7 @@ int wordprediction(LedKeyboard &kbd)
 
     if (! kbd.open()) return 1;
     kbd.setAllKeys(backgroundColor);
-    if(! kbd.commit()) return 1;    
-    initscr();
+    if(! kbd.commit()) return 1;
 
     
     for (uint i=0; i < keyArray.size(); i++) {
@@ -79,27 +79,38 @@ int wordprediction(LedKeyboard &kbd)
         keyArray[i] = { key, backgroundColor };
     }
 
-    
 
-    std::string predWord;
-    std::string prediction;
+    string predWord;
+    string prediction;
+    system("stty raw"); 
+
     char c;
     for (;;) {
         // prompt user and append line into context buffer
-        c = getch();
+        
+        c = cin.get();
         if (c == ' ') {
             context = "";
         }
-        context += c;
+
+        context.push_back(c);
         // request prediction
+        if (presage.predict().empty()) {
+            cout << "no suggestion available" << endl;
+            kbd.setAllKeys(backgroundColor);
+            if(! kbd.commit()) return 1;
+            continue;
+        }
         prediction = presage.predict()[0];
-
+        
         // print predictions
-        printw("     suggest: ");
-        cout << prediction;
+        cout <<"\n     suggest: " << prediction;
 
-        predWord = prediction.erase(0, context.length()-1);
-        lightWord(kbd, predWord);
+        if (prediction.length() > context.length()) {
+            predWord = prediction.substr(context.length());
+            lightWord(kbd, predWord);
+        }
+    
         
     }
 
