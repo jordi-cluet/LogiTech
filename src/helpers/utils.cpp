@@ -225,4 +225,16 @@ namespace utils {
 		return true;
 	}
 	
+	/*bool createCharTable(vector<int> data) {
+		std::string headers = "";
+		for (uint i = 0; i < headers.size(); i++) {
+			headers += "|  ";
+			if (i < 10) {
+				headers += (char)30+i
+			}
+			else {
+
+			}
+		}
+	}*/
 }

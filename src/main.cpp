@@ -8,6 +8,7 @@
 #include "helpers/utils.h"
 #include "classes/Keyboard.h"
 #include "classes/heatmap.h"
+#include "classes/wordprediction.h"
 
 
 int commit(LedKeyboard &kbd) {
@@ -283,7 +284,7 @@ int main(int argc, char **argv) {
 			return 2;
 		}
 		
-		
+		else if (arg == "-wp") {wordprediction(kbd); return 0;}
 
 		// Command arguments, these will cause parsing to ignore anything beyond the command and its arguments
 		if (arg == "-c") return commit(kbd);

@@ -1,8 +1,15 @@
 #include "heatmap.h"
 using namespace std;
 
+
+void print_table(vector<int> count, vector<int> deleted) {
+    cout << "Count: " << endl;
+    for (int i=0; i<count.size(); i++) {
+        cout << count[i] << ", ";
+    }
+}
+
 int heatKey(LedKeyboard &kbd, LedKeyboard::KeyValue &key) {
-    uint8_t increase = 0x15;
     if(defaultColor.green) {
         if(key.color.green > increase) {
             key.color.green -= increase;
@@ -57,7 +64,6 @@ int heatKey(LedKeyboard &kbd, LedKeyboard::KeyValue &key) {
 }
 
 int coolKey(LedKeyboard &kbd, LedKeyboard::KeyValue &key) {
-    uint8_t decrease = 0x08;
     if (key.color.red <= defaultColor.red) {
         if(key.color.red + decrease > defaultColor.red) {
             key.color.red = defaultColor.red;
@@ -66,7 +72,11 @@ int coolKey(LedKeyboard &kbd, LedKeyboard::KeyValue &key) {
             key.color.red += decrease;
         }
     }else {
-        key.color.red -= decrease;
+        if (key.color.red - decrease < defaultColor.red) {
+            key.color.red = defaultColor.red;
+        }else {
+            key.color.red -= decrease;
+        }
     }
     if (key.color.green <= defaultColor.green) {
         if(key.color.green + decrease > defaultColor.green) {
@@ -76,7 +86,11 @@ int coolKey(LedKeyboard &kbd, LedKeyboard::KeyValue &key) {
             key.color.green += decrease;
         }
     }else {
-        key.color.green -= decrease;
+        if (key.color.green - decrease < defaultColor.green) {
+            key.color.green = defaultColor.green;
+        }else {
+            key.color.green -= decrease;
+        }
     }
     if (key.color.blue <= defaultColor.blue) {
         if(key.color.blue + decrease > defaultColor.blue) {
@@ -86,26 +100,27 @@ int coolKey(LedKeyboard &kbd, LedKeyboard::KeyValue &key) {
             key.color.blue += decrease;
         }
     }else {
-        key.color.blue -= decrease;
+        if (key.color.blue - decrease < defaultColor.blue) {
+            key.color.blue = defaultColor.blue;
+        }else {
+            key.color.blue -= decrease;
+        }
     }
 
     if(! kbd.setKey(key)) return 1;
     if(! kbd.commit()) return 1;
 }
 
-
 int heatmap(LedKeyboard &kbd, string arg2)
 {   
-
-    //init
     uint8_t delay;
-    uint8_t decreasDelay = 10;
     utils::parseUInt8(arg2, delay);
     if (! kbd.open()) return 1;
     kbd.setAllKeys(defaultColor);
     if(! kbd.commit()) return 1;
 
-    LedKeyboard::KeyValueArray heatArray(36);
+    vector<int> count(36, 0);
+    vector<int> deleted(36,0);
     LedKeyboard::KeyValueArray heatArray(36);
     for (uint i=0; i < heatArray.size(); i++) {
 
@@ -128,16 +143,16 @@ int heatmap(LedKeyboard &kbd, string arg2)
 
 
     char c;
+    int previousIndex = 0;
     int index = -1;
     time_t lastKeyPress = time(nullptr);
-    time_t lastDecrease = time(nullptr);
 
     while (true) {
+        index = -1;
         if (time(nullptr) - lastKeyPress > delay) {
             for (uint i=0; i < heatArray.size(); i++) {
                 coolKey(kbd, heatArray[i]);
             }
-            time_t lastDecrease = time(nullptr);
         }
         c = getch();
         
@@ -153,8 +168,16 @@ int heatmap(LedKeyboard &kbd, string arg2)
 
         if (index >= 0) {
             if(! heatKey(kbd, heatArray[index])) return 1;
+            count[index]++;
             lastKeyPress = time(nullptr);
-            index = -1;
+            previousIndex = index;
+        }
+        if(c==127){
+            deleted[previousIndex]++;
+            
+        }
+        else if(c==27){
+            print_table(count, deleted);
         }
     }
 }

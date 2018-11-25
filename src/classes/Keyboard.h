@@ -204,7 +204,14 @@ class LedKeyboard {
 			Key::open_bracket, Key::close_bracket, Key::backslash, Key::dollar, Key::semicolon, Key::quote, Key::tilde,
 			Key::comma, Key::period, Key::slash, Key::caps_lock, Key::intl_backslash
 		};
+		//template <uint8_t, uint8_t> struct pair;
 
+		/*const vector<pair> matrixMapping = { pair(1,0), pair(1,1), pair(1,2), pair(1,3), pair(1,4), pair(1,5), pair(1,6), pair(1,7), 
+							   pair(1,8), pair(1,9), pair(3,1), pair(4,5), pair(4,3), pair(3,3), pair(2,3), pair(3,4), 
+							   pair(3,5), pair(3,6), pair(2,8), pair(3,7), pair(3,8), pair(3,9), pair(4,7), pair(4,6), 
+							   pair(2,9), pair(2,10), pair(2,1), pair(2,4) ,pair(2,5), pair(2,7), pair(4,4), pair(2,2), 
+							   pair(4,2), pair(2,6), pair(4,1)};
+*/
 		const KeyMatrix keyMatrix = {
 			{Key::esc, Key::blank, Key::f1, Key::f2, Key::f3, Key::f4, Key::blank, Key::f5, Key::f7, Key::f8, Key::blank, Key::f9, Key::f10, Key::f11, Key::f12},
 			{Key:: tilde, Key::n1, Key::n2, Key::n3, Key::n4, Key::n5, Key::n6, Key::n7, Key::n8, Key::n9, Key::n0, Key::minus, Key::equal},
